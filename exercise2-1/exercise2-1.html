@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PDM1 - W7P2 - Exercise 2.1</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../lib/main-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="../lib/libraries/p5.min.js"></script>
+  </head>
+
+  <body>
+    <h1>Exercise 2.1</h1>
+    <p>Your sketch:</p>
+    <div class="guidance">
+        <h2>Instructions</h2>
+        <div>
+            <p>In this exercise, you will layer two images of the same size on the canvas and create a  
+                fade effect by manipulating the pixels in the top image to gradually reveal the second image. 
+                You can see an example in the video below.
+            </p>
+            <p>You can use the provided images, night-sky.jpg and blue-sky.jpg, or you can use your own 
+                images. If you choose your own images, make sure they are the same size as each other. Make the 
+                canvas the same size as the images.</p>
+            <p>Choose one of your images to be the starting image and one to be the ending image--your 
+                fade will transition from the starting image to the ending image. Draw both images one on top of the 
+                other in <code>draw()</code>. The starting image should be the second image drawn.</p>
+            <p>Remember that you will need to call <code>loadPixels()</code> on the image before changing the 
+            values of any pixels, and that you will need to call <code>updatePixels()</code> on the image 
+            for your changes to take effect e.g.:</p>
+            <pre>
+img.loadPixels();
+
+img.pixels[index] = newValue;
+
+img.updatePixels();
+            </pre>
+            <p>Expected output:</p>
+            <p>
+                <video width="400" height="300" controls>
+                    <source src="./assets/exercise2-1.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </p>
+        </div>
+        <div>
+            <button class="btn btn-primary hint" type="button" data-bs-toggle="collapse" data-bs-target="#hint" aria-expanded="false" aria-controls="hint">
+                Hint
+            </button>
+            <div class="collapse" id="hint">
+                <div class="card card-body">
+                    <p>The alpha value of each pixel in an image will be 255--fully opaque. You can create the fade 
+                        effect by gradually reducing the value of the alpha value of each pixel. Remember that each pixel in an image translates to four elements in the image's pixel array. 
+                        These elements correspond to the red, green, blue, and alpha values of the pixel. Therefore, to 
+                        reduce the alpha values of each pixel in the image, iterate over every fourth element in the image's 
+                        pixel array.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="sketch.js"></script>
+  </body>
+</html>

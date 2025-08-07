@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PDM1 - W7P2 - Exercise 2.2</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../lib/main-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="../lib/libraries/p5.min.js"></script>
+  </head>
+
+  <body>
+    <h1>Exercise 2.2</h1>
+    <p>Your sketch:</p>
+    <div class="guidance">
+        <h2>Instructions</h2>
+        <div>
+            <p>This exercise is challenging!</p>
+            <p>In this exercise, create a wipe effect to transition from one image to another. You can see a few examples of wipes in the videos below.
+            </p>
+            <p>You can use the provided images, night-sky.jpg and blue-sky.jpg, or you can use your own 
+                images. If you choose your own images, make sure they have the same dimensions. Make the 
+                canvas the same size as the images.</p>
+            <p>There are two main ways to approach this task:</p>
+            <ol>
+                <li>Draw both images to the canvas as you did in the previous exercises. Create the wipe by selectively 
+                    making pixels in the top image transparent (set the alpha to 0). OR...
+                </li>
+                <li>Only draw the start image on the canvas. Create the wipe by selectively replacing the R, G, B values of 
+                    pixels in the start image with the values of the same pixels in the ending image.
+                </li>
+            </ol>
+            <p>The first approach is slightly easier.</p>
+            <p>The trickiest part of this exercise is figuring out how to translate the x, y coordinate of a pixel 
+                you want to change to the relevant indices of its R, G, B, A values in the image's pixels array. Write 
+                a function called <code>getIndexOfPixel()</code> that takes two parameters, <code>x</code> and <code>y</code>, 
+                which represent the x and y coordinates of a pixel. The function should return the index of the 
+                element in the pixel array that stores the pixel's red value. The function can assume that the image is the same width as 
+                the canvas.
+            </p>
+            <p>The tests in check-exercise2-2.html will 
+                check the output of this function for you. When your function is working properly, you can use it 
+                to create your wipe effect. You will still need to figure out which pixels to change and how to change them.</p>
+            <p>Expected output:</p>
+            <p>The following are examples of wipes you could create. Feel free to do something different!</p>
+            <p>
+                <video width="400" height="300" controls>
+                    <source src="./assets/exercise2-2-horizontal.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                <video width="400" height="300" controls>
+                    <source src="./assets/exercise2-2-vertical.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                <video width="400" height="300" controls>
+                    <source src="./assets/exercise2-2-square.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                <video width="400" height="300" controls>
+                    <source src="./assets/exercise2-2-stripe.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </p>
+        </div>
+        <div>
+            <button class="btn btn-primary hint" type="button" data-bs-toggle="collapse" data-bs-target="#hint" aria-expanded="false" aria-controls="hint">
+                Hint
+            </button>
+            <div class="collapse" id="hint">
+                <div class="card card-body">
+                    <h3>Help with the <code>getIndexOfPixel()</code> function</h3>
+                    <p>You will need to use the <code>width</code> system variable.</p>
+                    <p>Here are a few clues:
+                    </p>
+                    <ul>
+                        <li>When y is 0, the index of any pixel will be x * 4.</li>
+                        <li>The index of the very first pixel on the second row (y is 1) will be the index of the last 
+                            pixel on the first row plus 4.
+                        </li>
+                        <li>The index of the first pixel on the third row (y is 2) will be the width of the image multiplied by two, multiplied by 4.</li>
+                    </ul>
+                    <h3>Help with the wipes</h3>
+                    <p>It is recommended that you try a simple wipe first e.g. a horizontal wipe rather than a stripe wipe. You will need to work out 
+                        the logic pattern that creates the wipe. For example, to create a horizontal wipe that moves left to right, remove / replace 
+                        all pixels that have a given x coordinate e.g. all pixels with x === 0, then all pixels with x === 1 etc.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="sketch.js"></script>
+  </body>
+</html>
