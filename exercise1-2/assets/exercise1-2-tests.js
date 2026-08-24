@@ -1,4 +1,4 @@
-import { TestResults, advanceToFrame, getShapes, canvasStatus, testSettingIsCalled, LOAD_IMAGE, checkCanvasSize, TestImage } from "../../lib/test-utils.js";
+import { TestResults, advanceToFrame, getShapes, canvasStatus, testSettingIsCalled, LOAD_IMAGE, checkCanvasSize, TestImage, SHAPE } from "https://cdn.jsdelivr.net/gh/Supportive-IDE/p5js-testing-demo@latest/p5jsTestingLibrary.js";
 
 /**
  * A hacky solution to wait for p5js to load the canvas. Include in all exercise test files.
@@ -12,7 +12,7 @@ function waitForP5() {
 }
 
 function checkImageProperties(expectedImg, actualShapes) {
-    const actualImgs = actualShapes.filter(s => s.type === IMAGE);
+    const actualImgs = actualShapes.filter(s => s.type === SHAPE.IMAGE);
     if (actualImgs.length === 0) {
         TestResults.addFail(`At frame ${frameCount}, no images were found on the canvas.`);
     } else {
@@ -48,24 +48,20 @@ async function runTests(canvas) {
     canvas.style.pointerEvents = "none";
     const resultsDiv = document.getElementById("results");
     checkCanvasSize(800, 600);
-    advanceToFrame(frameCount + 1);
+    await advanceToFrame(frameCount + 1);
     for (const e of canvasStatus.errors) {
         TestResults.addFail(`In frame ${frameCount}, ${e}`);
     }
-    const loadInPreload = testSettingIsCalled(LOAD_IMAGE, false, false, true);
-    const loadInSetup = testSettingIsCalled(LOAD_IMAGE, true, false, false);
-    const loadInDraw = testSettingIsCalled(LOAD_IMAGE, false, true, false);
-    if (loadInPreload) {
-        TestResults.addPass("<code>loadImage()</code> is called in <code>preload()</code>.");
-    }
+    const loadInSetup = testSettingIsCalled(LOAD_IMAGE.re, true, false, false);
+    const loadInDraw = testSettingIsCalled(LOAD_IMAGE.re, false, true, false);
     if (loadInSetup) {
-        TestResults.addWarning("<code>loadImage()</code> is called in <code>setup()</code>. Although this can work, it should only be called in <code>preload()</code> to ensure the image is fully loaded before any other code is run.");
+        TestResults.addPass("<code>loadImage()</code> is called in <code>setup()</code>.");
     }
     if (loadInDraw) {
         TestResults.addFail("<code>loadImage()</code> should not be called in <code>draw()</code> because it will repeatedly load the image.");
     }
-    if (!loadInPreload && !loadInSetup && !loadInDraw) {
-        TestResults.addWarning("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>preload()</code>, <code>setup()</code>, or <code>draw()</code>).");
+    if (!loadInSetup && !loadInDraw) {
+        TestResults.addWarning("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>setup()</code> or <code>draw()</code>).");
     }
     let actualImages = [...getShapes()].filter(s => s.type === IMAGE);
     if (actualImages.length < 3) {

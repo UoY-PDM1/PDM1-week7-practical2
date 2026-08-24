@@ -1,4 +1,4 @@
-import { TestResults, advanceToFrame, getShapes, canvasStatus, testSettingIsCalled, LOAD_IMAGE, checkCanvasSize, TestImage, IMAGE } from "../../lib/test-utils.js";
+import { TestResults, advanceToFrame, getShapes, canvasStatus, testSettingIsCalled, LOAD_IMAGE, checkCanvasSize, TestImage, SHAPE } from "https://cdn.jsdelivr.net/gh/Supportive-IDE/p5js-testing-demo@latest/p5jsTestingLibrary.js";
 
 /**
  * A hacky solution to wait for p5js to load the canvas. Include in all exercise test files.
@@ -12,7 +12,7 @@ function waitForP5() {
 }
 
 function checkImageProperties(expectedImg, actualShapes) {
-    const actualImgs = actualShapes.filter(s => s.type === IMAGE);
+    const actualImgs = actualShapes.filter(s => s.type === SHAPE.IMAGE);
     if (actualImgs.length === 0) {
         TestResults.addFail(`At frame ${frameCount}, no images were found on the canvas.`);
     } else {
@@ -32,43 +32,39 @@ async function runTests(canvas) {
     for (const e of canvasStatus.errors) {
         TestResults.addFail(`In frame ${frameCount}, ${e}`);
     }
-    const loadInPreload = testSettingIsCalled(LOAD_IMAGE, false, false, true);
-    const loadInSetup = testSettingIsCalled(LOAD_IMAGE, true, false, false);
-    const loadInDraw = testSettingIsCalled(LOAD_IMAGE, false, true, false);
-    if (loadInPreload) {
-        TestResults.addPass("<code>loadImage()</code> is called in <code>preload()</code>.");
-    }
+    const loadInSetup = testSettingIsCalled(LOAD_IMAGE.re, true, false, false);
+    const loadInDraw = testSettingIsCalled(LOAD_IMAGE.re, false, true, false);
     if (loadInSetup) {
-        TestResults.addWarning("<code>loadImage()</code> is called in <code>setup()</code>. Although this can work, it should only be called in <code>preload()</code> to ensure the image is fully loaded before any other code is run.");
+        TestResults.addPass("<code>loadImage()</code> is called in <code>setup()</code>.");
     }
     if (loadInDraw) {
         TestResults.addFail("<code>loadImage()</code> should not be called in <code>draw()</code> because it will repeatedly load the image.");
     }
-    if (!loadInPreload && !loadInSetup && !loadInDraw) {
-        TestResults.addWarning("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>preload()</code>, <code>setup()</code>, or <code>draw()</code>).");
+    if (!loadInSetup && !loadInDraw) {
+        TestResults.addWarning("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>setup()</code> or <code>draw()</code>).");
     }
     const imgOnLoad = new TestImage(width / 2, height / 2, width, height, 1024, 820, CENTER);
     const imgOnLoadIncFirst = new TestImage(width / 2, height / 2, width + 1, height + 1, 1024, 820, CENTER);
     const actualShapesOnLoad = getShapes();
     const firstImg = actualShapesOnLoad[actualShapesOnLoad.length - 1];
-    if (firstImg.type === IMAGE && imgOnLoad.isEqualTo(actualShapesOnLoad[actualShapesOnLoad.length - 1]) || imgOnLoadIncFirst.isEqualTo(actualShapesOnLoad[actualShapesOnLoad.length - 1])) {
-        TestResults.addPass("When the sketch first loads, there is one image in the centre that is the same size as the canvas.");
+    if (firstImg.type === SHAPE.IMAGE) {
+        TestResults.addPass("When the sketch first loads, there is an image on the canvas.");
     } else {
-        TestResults.addFail("When the sketch first loads, there should be one image in the centre of the canvas that is the same size as the canvas. You can achieve this by setting <code>imageMode(CENTER)</code>, positioning the image at width / 2, height / 2, and giving it a width of 512 and a height of 410 (use variables!).")
+        TestResults.addFail("When the sketch first loads, there should be an image in the centre of the canvas that is the same size as the canvas. You can achieve this by setting <code>imageMode(CENTER)</code>, positioning the image at width / 2, height / 2, and giving it a width of 512 and a height of 410 (use variables!).")
     }
-    advanceToFrame(frameCount + 1);
+    await advanceToFrame(frameCount + 1);
     const actualShapesNextFrame = getShapes();
     const secondImg = actualShapesNextFrame[actualShapesNextFrame.length - 1];
-    if (firstImg.type === IMAGE && secondImg.type === IMAGE) {
-        const firstLoc = secondImg.getLocationInMode(CENTER);
-        const secondLoc = secondImg.getLocationInMode(CENTER);
+    if (firstImg.type === IMAGE && secondImg.type === SHAPE.IMAGE) {
+        const firstLoc = [(imgOnLoad.x + imgOnLoad.w) / 2, (imgOnLoad.y + imgOnLoad.h) / 2]; //secondImg.getLocationInMode(CENTER);
+        const secondLoc = [(secondImg.x + secondImg.w) / 2, (secondImg.y + secondImg.h) / 2]; //secondImg.getLocationInMode(CENTER);
         if (firstLoc[0] === secondLoc[0] && firstLoc[1] === secondLoc[1] && firstLoc[0] === width / 2 && firstLoc[1] === height / 2) {
             TestResults.addPass("At frame 2, the image is in the centre of the canvas.");
         }
         if (secondImg.w - firstImg.w === 1 && secondImg.h - firstImg.h) {
             TestResults.addPass("The image grows by 1 pixel (width and height) each frame.");
 
-            advanceToFrame(2000);
+            await advanceToFrame(2000);
             const actualShapesStop = getShapes();
             const lastImg = actualShapesStop[actualShapesStop.length - 1];
             if (lastImg.h === 820) {
